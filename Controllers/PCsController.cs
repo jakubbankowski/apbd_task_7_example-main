@@ -34,20 +34,23 @@ public class PCsController : ControllerBase
         return Ok(pcs);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id}/components")]
     public async Task<ActionResult<PCResponseDTO>> GetPC(int id)
     {
-        var pc = await _context.Pcs.Select(
-            p => new PCResponseDTO
+        var pcExists = await _context.Pcs.AnyAsync(p => p.Id == id);
+        if (!pcExists) return NotFound();
+
+        var components = await _context.PcComponents
+            .Where(pc => pc.PCId == id)
+            .Select(pc => new PCComponentsResponseDTO
             {
-                Id = p.Id,
-                Name = p.Name,
-                Weight = p.Weight,
-                Warranty = p.Warranty,
-                CreatedAt = p.CreatedAt,
-                Stock = p.Stock
-            }).Where(p => p.Id == id).FirstOrDefaultAsync();
-        return Ok(pc);
+                ComponentCode = pc.ComponentCode,
+                ComponentName = pc.Component.Name,
+                Amount = pc.Amount
+            })
+            .ToListAsync();
+        return Ok(components);
+
     }
 
     [HttpPost]
@@ -65,5 +68,33 @@ public class PCsController : ControllerBase
         await _context.SaveChangesAsync();
         
         return CreatedAtAction(nameof(GetPCs), new { id = pc.Id }, pc);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<IActionResult>> UpdatePC(int id, UpdatePCRequestDTO request)
+    {
+        var pc = await _context.Pcs.FindAsync(id);
+        if (pc == null) return NotFound();
+        
+        pc.Name = request.Name;
+        pc.Weight = request.Weight;
+        pc.Warranty = request.Warranty;
+        pc.CreatedAt = request.CreatedAt;
+        pc.Stock = request.Stock;
+
+        await _context.SaveChangesAsync();
+        return Ok(pc);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletePC(int id)
+    {
+        var pc = await _context.Pcs.FindAsync(id);
+        if (pc == null) return NotFound();
+
+        _context.Pcs.Remove(pc);
+        await _context.SaveChangesAsync();
+        
+        return NoContent();
     }
 }

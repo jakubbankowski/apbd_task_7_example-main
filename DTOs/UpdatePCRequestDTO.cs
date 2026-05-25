@@ -1,10 +1,10 @@
-﻿namespace APBD_TASK_7.Data;
+﻿namespace APBD_TASK_7.DTOs;
 
-public class CreatePCRequestDTO
+public class UpdatePCRequestDTO
 {
     public string Name { get; set; } = string.Empty;
     public double Weight { get; set; }
     public int Warranty { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; }
     public int Stock { get; set; }
 }

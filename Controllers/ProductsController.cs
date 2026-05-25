@@ -2,7 +2,7 @@ using APBD_TASK_7.Data;
 using APBD_TASK_7.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+/*
 namespace APBD_TASK_7.Controllers;
 
 [ApiController]
@@ -16,7 +16,7 @@ public class ProductsController : ControllerBase
         _context = context;
     }
 
-    /*
+
     [HttpGet]
     public async Task<ActionResult<List<Product>>> GetProducts()
     {
@@ -51,7 +51,7 @@ public class ProductsController : ControllerBase
 
         return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
     }
-    */
+
 }
 
 public class CreateProductRequest
@@ -60,3 +60,4 @@ public class CreateProductRequest
     public decimal Price { get; set; }
     public int Stock { get; set; }
 }
+*/
